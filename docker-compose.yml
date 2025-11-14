@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: shopuser
+      POSTGRES_PASSWORD: shopsecret
+      POSTGRES_DB: shopdb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./ddl.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - "5432:5432"
+    restart: "always"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shopuser -d shopdb -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - db-directus
+
+  directus:
+    image: directus/directus:latest
+    depends_on:
+      - db
+    environment:
+      DB_CLIENT: "pg"
+      DB_CONNECTION_STRING: "postgresql://shopuser:shopsecret@db:5432/shopdb"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "sajjadxw1z"
+    ports:
+      - "8055:8055"
+    restart: "always"
+    volumes:
+      - directus_files:/directus/uploads
+    networks:
+      - db-directus
+
+volumes:
+  db_data:
+  directus_files:
+
+networks:
+  db-directus:
+    driver: bridge
