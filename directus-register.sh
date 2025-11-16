@@ -3,7 +3,7 @@ set -eu
 
 DIRECTUS_URL="${DIRECTUS_URL:-http://localhost:8055}"
 ADMIN_EMAIL="${ADMIN_EMAIL:-admin@example.com}"
-ADMIN_PASSWORD="${ADMIN_PASSWORD:-sajjadxw1z}"
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-test}"
 RETRIES=${RETRIES:-60}
 SLEEP=${SLEEP:-2}
 
